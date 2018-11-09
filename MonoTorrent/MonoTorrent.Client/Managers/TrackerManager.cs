@@ -122,16 +122,18 @@ namespace MonoTorrent.Client.Tracker
             for (int i = 0; i < announces.Count; i++)
                 trackerTiers.Add(new TrackerTier(announces[i]));
 
-            trackerTiers.RemoveAll(delegate(TrackerTier t) { return t.Trackers.Count == 0; });
+            trackerTiers.RemoveAll(delegate (TrackerTier t) { return t.Trackers.Count == 0; });
             foreach (TrackerTier tier in trackerTiers)
             {
                 foreach (Tracker tracker in tier)
                 {
-                    tracker.AnnounceComplete += delegate(object o, AnnounceResponseEventArgs e) {
+                    tracker.AnnounceComplete += delegate (object o, AnnounceResponseEventArgs e)
+                    {
                         ClientEngine.MainLoop.Queue(delegate { OnAnnounceComplete(o, e); });
                     };
 
-                    tracker.ScrapeComplete += delegate(object o, ScrapeResponseEventArgs e) {
+                    tracker.ScrapeComplete += delegate (object o, ScrapeResponseEventArgs e)
+                    {
                         ClientEngine.MainLoop.Queue(delegate { OnScrapeComplete(o, e); });
                     };
                 }
@@ -156,12 +158,12 @@ namespace MonoTorrent.Client.Tracker
         public WaitHandle Announce(Tracker tracker)
         {
             Check.Tracker(tracker);
-            TrackerTier tier = trackerTiers.Find(delegate(TrackerTier t) { return t.Trackers.Contains(tracker); });
-            if(tier == null)
+            TrackerTier tier = trackerTiers.Find(delegate (TrackerTier t) { return t.Trackers.Contains(tracker); });
+            if (tier == null)
                 throw new ArgumentException("Tracker has not been registered with the manager", "tracker");
 
             TorrentEvent tevent = tier.SentStartedEvent ? TorrentEvent.None : TorrentEvent.Started;
-            return Announce(tracker, tevent , false, new ManualResetEvent(false));
+            return Announce(tracker, tevent, false, new ManualResetEvent(false));
         }
 
         internal WaitHandle Announce(TorrentEvent clientEvent)
@@ -174,7 +176,7 @@ namespace MonoTorrent.Client.Tracker
         private WaitHandle Announce(Tracker tracker, TorrentEvent clientEvent, bool trySubsequent, ManualResetEvent waitHandle)
         {
             ClientEngine engine = manager.Engine;
-            
+
             // If the engine is null, we have been unregistered
             if (engine == null)
             {
@@ -263,11 +265,11 @@ namespace MonoTorrent.Client.Tracker
 
             if (e.Successful)
             {
-		manager.Peers.BusyPeers.Clear ();
+                manager.Peers.BusyPeers.Clear();
                 int count = manager.AddPeersCore(e.Peers);
                 manager.RaisePeersFound(new TrackerPeersAdded(manager, count, e.Peers.Count, e.Tracker));
 
-                TrackerTier tier = trackerTiers.Find(delegate(TrackerTier t) { return t.Trackers.Contains(e.Tracker); });
+                TrackerTier tier = trackerTiers.Find(delegate (TrackerTier t) { return t.Trackers.Contains(e.Tracker); });
                 if (tier != null)
                 {
                     Toolbox.Switch<Tracker>(tier.Trackers, 0, tier.IndexOf(e.Tracker));
@@ -296,7 +298,7 @@ namespace MonoTorrent.Client.Tracker
 
         public WaitHandle Scrape(Tracker tracker)
         {
-            TrackerTier tier = trackerTiers.Find(delegate(TrackerTier t) { return t.Trackers.Contains(tracker); });
+            TrackerTier tier = trackerTiers.Find(delegate (TrackerTier t) { return t.Trackers.Contains(tracker); });
             if (tier == null)
                 return new ManualResetEvent(true);
 
