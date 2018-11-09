@@ -241,7 +241,7 @@ namespace MonoTorrent
                     listener.ExportTo(Console.Out);
                 }
 
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(1000);
             }
         }
 
@@ -257,7 +257,7 @@ namespace MonoTorrent
             AppendFormat(sb, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", null);
             AppendFormat(sb, "", null);
         }
-        
+
         private static void AppendFormat(StringBuilder sb, string str, params object[] formatting)
         {
             if (formatting != null)
@@ -289,10 +289,10 @@ namespace MonoTorrent
             engine.Dispose();
 
             /*foreach (TraceListener lst in Debug.Listeners)
-			{
-				lst.Flush();
-				lst.Close();
-			}*/
+            {
+                lst.Flush();
+                lst.Close();
+            }*/
 
             System.Threading.Thread.Sleep(2000);
         }

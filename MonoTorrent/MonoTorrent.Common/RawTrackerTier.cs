@@ -34,6 +34,12 @@ namespace MonoTorrent
                 Add (v);
         }
 
+        public RawTrackerTier (string announce)
+            : this()
+        {
+            Add(announce);
+        }
+
         public int IndexOf (string item)
         {
             return Tier.IndexOf ((BEncodedString) item);
